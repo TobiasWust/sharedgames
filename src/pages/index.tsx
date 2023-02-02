@@ -1,6 +1,8 @@
+import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { GoDiffAdded } from "react-icons/go";
+import { toast } from "react-toastify";
 import FriendsModal from "../components/FriendsModal";
 import Game from "../components/Game";
 import Player, { TPlayer } from "../components/Player";
@@ -25,7 +27,7 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
-          alert(data.error);
+          toast.error(data.error);
           return;
         }
         if (

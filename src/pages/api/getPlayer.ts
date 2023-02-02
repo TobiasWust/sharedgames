@@ -27,10 +27,14 @@ export default async function handler(
         },
       })
       .catch(() => {
-        return res.status(400).json({
-          error: "Invalid playerId or profile not public",
-        });
+        throw new Error("Invalid playerId or profile not public");
       });
+
+    if (!playerIdResponse?.data.response.steamid) {
+      return res.status(400).json({
+        error: "Invalid playerId or profile not public",
+      });
+    }
     steamId = playerIdResponse?.data.response.steamid;
   }
 
@@ -39,10 +43,14 @@ export default async function handler(
       `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_API_KEY}&steamids=${steamId}`
     )
     .catch(() => {
-      return res.status(400).json({
-        error: "Invalid playerId or profile not public",
-      });
+      throw new Error("Invalid playerId or profile not public");
     });
+
+  if (!playerData?.data.response.players[0]) {
+    return res.status(400).json({
+      error: "Invalid playerId or profile not public",
+    });
+  }
 
   const player = playerData?.data.response.players[0];
 
@@ -51,10 +59,14 @@ export default async function handler(
       `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_API_KEY}&steamid=${steamId}&format=json`
     )
     .catch(() => {
-      return res.status(400).json({
-        error: "Invalid playerId or profile not public",
-      });
+      throw new Error("Invalid playerId or profile not public");
     });
+
+  if (!ownedGamesData?.data.response.games) {
+    return res.status(400).json({
+      error: "Invalid playerId or profile not public",
+    });
+  }
 
   const ownedGames = ownedGamesData?.data.response.games.map(
     (game: any) => game.appid
