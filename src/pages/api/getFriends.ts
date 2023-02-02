@@ -23,8 +23,25 @@ export default async function handler(
     }
   );
 
-  const friendList = friendListResponse.data.friendslist.friends.map(
+  const friendListRaw = friendListResponse.data.friendslist.friends.map(
     (friend: any) => friend.steamid
+  );
+
+  const FriendsWithNamesRes = await axios.get(
+    `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/`,
+    {
+      params: {
+        key: process.env.STEAM_API_KEY,
+        steamids: friendListRaw.join(","),
+      },
+    }
+  );
+
+  const friendList = FriendsWithNamesRes.data.response.players.map(
+    (friend: any) => ({
+      steamId: friend.steamid,
+      name: friend.personaname,
+    })
   );
 
   return res.status(200).json(friendList);

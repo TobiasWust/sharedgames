@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { GoDiffAdded } from "react-icons/go";
+import FriendsModal from "../components/FriendsModal";
 import Game from "../components/Game";
 import Player, { TPlayer } from "../components/Player";
 import intersection from "../utils/intersection";
@@ -15,6 +16,7 @@ export default function Home() {
   const [playerId, setPlayerId] = useState("tobiaswust");
   const [players, setPlayers] = useState<PlayerWithGames[]>([]);
   const [gameIds, setGameIds] = useState<string[]>([]);
+  const [friendsFor, setFriendsFor] = useState("");
 
   function getPlayerData(_playerID: string) {
     fetch(`/api/getPlayer?playerId=${_playerID}`)
@@ -32,11 +34,8 @@ export default function Home() {
   }
 
   function getFriends(_playerId: string) {
-    fetch(`/api/getFriends?playerId=${_playerId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        data.forEach((steamId: string) => getPlayerData(steamId));
-      });
+    setFriendsFor(_playerId);
+    document.getElementById("friends-modal")?.click();
   }
 
   function removePlayer(_playerId: string) {
@@ -84,14 +83,16 @@ export default function Home() {
 
         <h2 className="font-bold text-accent-content">PLAYERS</h2>
         <table className="table w-full">
-          {players.map((player) => (
-            <Player
-              key={player.player.steamid}
-              player={player.player}
-              removePlayer={() => removePlayer(player.player.steamid)}
-              getFriends={() => getFriends(player.player.steamid)}
-            />
-          ))}
+          <tbody>
+            {players.map((player) => (
+              <Player
+                key={player.player.steamid}
+                player={player.player}
+                removePlayer={() => removePlayer(player.player.steamid)}
+                getFriends={() => getFriends(player.player.steamid)}
+              />
+            ))}
+          </tbody>
         </table>
         <h2>
           <span className="font-bold text-accent-content">SHARED GAMES</span>{" "}
@@ -107,6 +108,8 @@ export default function Home() {
           ))}
         </div>
       </main>
+      {/* eslint-disable-next-line react/jsx-no-bind */}
+      <FriendsModal playerId={friendsFor} addPlayer={getPlayerData} />
     </>
   );
 }
