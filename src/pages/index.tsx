@@ -1,24 +1,50 @@
+// import { useQueries } from "@tanstack/react-query";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import intersection from "../utils/intersection";
 
 type Player = {
-  personaname: string;
+  player: {
+    personaname: string;
+  };
+  ownedGames: string[];
 };
 
 export default function Home() {
   const [playerId, setPlayerId] = useState("tobiaswust");
   const [players, setPlayers] = useState<Player[]>([]);
+  const [gameIds, setGameIds] = useState<string[]>([]);
 
   function getPlayerData() {
     fetch(`/api/getPlayer?playerId=${playerId}`)
       .then((res) => res.json())
       .then((data) => {
-        if (players.find((player) => player.personaname === data.personaname))
+        if (
+          players.find(
+            (player) => player.player.personaname === data.personaname
+          )
+        )
           return;
         setPlayers((state) => [...state, data]);
       });
   }
+
+  // const results = useQueries({
+  //   queries: gameIds.map((gameId) => ({
+  //     queryKey: ["games", gameId],
+  //     queryFn: () =>
+  //       fetch(`/api/getGameInfos?gameId=${gameId}`).then((res) => res.json()),
+  //   })),
+  // });
+
+  // console.log("results:", results);
+
+  useEffect(() => {
+    if (players.length > 1) {
+      const gIds = intersection(players.map((player) => player.ownedGames));
+      setGameIds(gIds);
+    }
+  }, [players, gameIds]);
 
   return (
     <>
@@ -44,12 +70,12 @@ export default function Home() {
           ))}
         </ul>
         <h2>Games:</h2>
+        <p>Games in common: {gameIds.length}</p>
+        {gameIds.length === 0 && <p>No games in common</p>}
         <ul>
-          {players.map(
-            (player) =>
-              player.ownedGames &&
-              player.ownedGames.map((game) => <li>{game.details.name}</li>)
-          )}
+          {gameIds.map((gameId) => (
+            <li>{gameId}</li>
+          ))}
         </ul>
       </main>
     </>

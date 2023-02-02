@@ -7,47 +7,46 @@ export default async function handler(
 ) {
   const { playerId } = req.query;
 
-  const playerIdResponse = await axios.get(
-    `http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/`,
-    {
-      params: {
-        key: process.env.STEAM_API_KEY,
-        vanityurl: playerId,
-      },
-    }
-  );
+  let steamId;
 
-  const { steamid } = playerIdResponse.data.response;
+  if (!playerId) {
+    return res.status(400).json({
+      error: "Missing playerId",
+    });
+  }
+
+  // check if playerId is a steamId or a vanityUrl
+  if (playerId.length === 17) {
+    steamId = playerId;
+  } else {
+    const playerIdResponse = await axios.get(
+      `http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/`,
+      {
+        params: {
+          key: process.env.STEAM_API_KEY,
+          vanityurl: playerId,
+        },
+      }
+    );
+    steamId = playerIdResponse.data.response.steamid;
+  }
 
   const playerData = await axios.get(
-    `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_API_KEY}&steamids=${steamid}`
+    `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_API_KEY}&steamids=${steamId}`
   );
 
   const player = playerData.data.response.players[0];
 
   const ownedGamesData = await axios.get(
-    `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_API_KEY}&steamid=${steamid}&format=json`
+    `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_API_KEY}&steamid=${steamId}&format=json`
   );
 
-  const ownedGames = ownedGamesData.data.response.games;
-
-  const ownedGameswithDetails = await Promise.all(
-    ownedGames.map(async (game: any) => {
-      const gameDetails = await axios.get(
-        `https://steamspy.com/api.php?request=appdetails&appid=${game.appid}`
-      );
-
-      return {
-        ...game,
-        details: gameDetails.data,
-      };
-    })
+  const ownedGames = ownedGamesData.data.response.games.map(
+    (game: any) => game.appid
   );
 
-  console.log("ownedGameswithDetails:", ownedGameswithDetails);
-
-  res.status(200).json({
+  return res.status(200).json({
     player,
-    ownedGames: ownedGameswithDetails,
+    ownedGames,
   });
 }
