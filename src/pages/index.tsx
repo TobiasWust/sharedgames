@@ -14,8 +14,8 @@ export default function Home() {
   const [players, setPlayers] = useState<PlayerWithGames[]>([]);
   const [gameIds, setGameIds] = useState<string[]>([]);
 
-  function getPlayerData() {
-    fetch(`/api/getPlayer?playerId=${playerId}`)
+  function getPlayerData(_playerID: string) {
+    fetch(`/api/getPlayer?playerId=${_playerID}`)
       .then((res) => res.json())
       .then((data) => {
         if (
@@ -29,9 +29,17 @@ export default function Home() {
       });
   }
 
-  function removePlayer(playerId: string) {
+  function getFriends(_playerId: string) {
+    fetch(`/api/getFriends?playerId=${_playerId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        data.forEach((steamId: string) => getPlayerData(steamId));
+      });
+  }
+
+  function removePlayer(_playerId: string) {
     setPlayers((state) =>
-      state.filter((player) => player.player.steamid !== playerId)
+      state.filter((player) => player.player.steamid !== _playerId)
     );
   }
 
@@ -39,6 +47,8 @@ export default function Home() {
     if (players.length > 1) {
       const gIds = intersection(players.map((player) => player.ownedGames));
       setGameIds(gIds);
+    } else {
+      setGameIds([]);
     }
   }, [players]);
 
@@ -56,7 +66,7 @@ export default function Home() {
           value={playerId}
           onChange={(e) => setPlayerId(e.target.value)}
         />
-        <button type="button" onClick={getPlayerData}>
+        <button type="button" onClick={() => getPlayerData(playerId)}>
           Get Player Data
         </button>
         <h2>Players:</h2>
@@ -66,6 +76,7 @@ export default function Home() {
               key={player.player.steamid}
               player={player.player}
               removePlayer={() => removePlayer(player.player.steamid)}
+              getFriends={() => getFriends(player.player.steamid)}
             />
           ))}
         </ul>

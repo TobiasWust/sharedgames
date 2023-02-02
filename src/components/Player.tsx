@@ -11,9 +11,14 @@ export type TPlayer = {
 type PlayerProps = {
   player: TPlayer;
   removePlayer: () => void;
+  getFriends: () => void;
 };
 
-export default function Player({ player, removePlayer }: PlayerProps) {
+export default function Player({
+  player,
+  removePlayer,
+  getFriends,
+}: PlayerProps) {
   return (
     <li>
       <p>{player.personaname}</p>
@@ -25,7 +30,8 @@ export default function Player({ player, removePlayer }: PlayerProps) {
         <a href={player.profileurl} target="_blank" rel="noreferrer">
           <SiSteam className="inline-block" /> Open in Steam
         </a>
-        <button type="button">
+        {/* // todo open modal and select friends that I want to add */}
+        <button disabled type="button" onClick={() => getFriends()}>
           <GiThreeFriends className="inline-block" /> Import friends
         </button>
       </p>
