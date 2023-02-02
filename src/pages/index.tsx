@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import { GoDiffAdded } from "react-icons/go";
 import Game from "../components/Game";
 import Player, { TPlayer } from "../components/Player";
 import intersection from "../utils/intersection";
@@ -61,14 +62,25 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="grid max-w-md gap-3">
-        <input
-          type="text"
-          value={playerId}
-          onChange={(e) => setPlayerId(e.target.value)}
-        />
-        <button type="button" onClick={() => getPlayerData(playerId)}>
-          Get Player Data
-        </button>
+        <form
+          className="input-group"
+          onSubmit={(e) => {
+            e.preventDefault();
+            getPlayerData(playerId);
+          }}
+        >
+          <input
+            className="input"
+            placeholder="Enter Steam ID"
+            type="text"
+            value={playerId}
+            onChange={(e) => setPlayerId(e.target.value)}
+          />
+          <button className="btn-primary btn" type="button">
+            <GoDiffAdded />
+          </button>
+        </form>
+
         <h2>Players:</h2>
         <ul>
           {players.map((player) => (
