@@ -1,7 +1,8 @@
 import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import Footer from "../components/Footer";
 
 const queryClient = new QueryClient();
 
@@ -10,6 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <Component {...pageProps} />
+      <Footer />
       <ToastContainer
         position="bottom-right"
         autoClose={2000}

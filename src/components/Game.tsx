@@ -21,7 +21,7 @@ export default function Game({ gameId }: { gameId: string }) {
       <Image
         className="w-full rounded-lg"
         src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${data.appid}/header.jpg`}
-        alt=""
+        alt={data.name}
         width={400}
         height={225}
       />
