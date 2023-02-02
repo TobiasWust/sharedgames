@@ -115,7 +115,7 @@ export default function Home() {
           </button>
         </form>
 
-        {players.length === 0 && (
+        {playerId === "" && players.length === 0 && (
           <p>
             Do you ever struggle to keep track of all the games you own on
             Steam? And when it comes to playing with friends, it&apos;s even
@@ -129,7 +129,7 @@ export default function Home() {
           </p>
         )}
 
-        {players.length > 0 && (
+        {(playerId !== "" || players.length > 0) && (
           <>
             <h2 className="font-bold text-accent-content">PLAYERS</h2>
             <div className="grid gap-3">
