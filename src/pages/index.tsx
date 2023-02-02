@@ -29,6 +29,12 @@ export default function Home() {
       });
   }
 
+  function removePlayer(playerId: string) {
+    setPlayers((state) =>
+      state.filter((player) => player.player.steamid !== playerId)
+    );
+  }
+
   useEffect(() => {
     if (players.length > 1) {
       const gIds = intersection(players.map((player) => player.ownedGames));
@@ -56,7 +62,11 @@ export default function Home() {
         <h2>Players:</h2>
         <ul>
           {players.map((player) => (
-            <Player key={player.player.steamid} player={player.player} />
+            <Player
+              key={player.player.steamid}
+              player={player.player}
+              removePlayer={() => removePlayer(player.player.steamid)}
+            />
           ))}
         </ul>
         <h2>Games:</h2>

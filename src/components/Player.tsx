@@ -8,12 +8,17 @@ export type TPlayer = {
   profileurl: string;
 };
 
-export default function Player({ player }: { player: TPlayer }) {
+type PlayerProps = {
+  player: TPlayer;
+  removePlayer: () => void;
+};
+
+export default function Player({ player, removePlayer }: PlayerProps) {
   return (
     <li>
       <p>{player.personaname}</p>
       <p className="flex gap-3">
-        <button type="button">
+        <button type="button" onClick={() => removePlayer()}>
           <GoDiffRemoved className="inline-block" />
           Remove
         </button>
