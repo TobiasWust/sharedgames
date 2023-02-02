@@ -26,7 +26,8 @@ export default async function handler(
           vanityurl: playerId,
         },
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         throw new Error("Invalid playerId or profile not public");
       });
 
@@ -42,7 +43,8 @@ export default async function handler(
     .get(
       `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_API_KEY}&steamids=${steamId}`
     )
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       throw new Error("Invalid playerId or profile not public");
     });
 
@@ -58,7 +60,8 @@ export default async function handler(
     .get(
       `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_API_KEY}&steamid=${steamId}&format=json`
     )
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       throw new Error("Invalid playerId or profile not public");
     });
 
