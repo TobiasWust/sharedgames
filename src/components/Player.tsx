@@ -20,21 +20,34 @@ export default function Player({
   getFriends,
 }: PlayerProps) {
   return (
-    <li>
-      <p>{player.personaname}</p>
-      <p className="flex gap-3">
-        <button type="button" onClick={() => removePlayer()}>
-          <GoDiffRemoved className="inline-block" />
-          Remove
-        </button>
-        <a href={player.profileurl} target="_blank" rel="noreferrer">
-          <SiSteam className="inline-block" /> Open in Steam
+    <tr>
+      <td>
+        <a
+          className="font-bold text-accent-content"
+          href={player.profileurl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {player.personaname}
         </a>
+      </td>
+      <td className="flex gap-3">
         {/* // todo open modal and select friends that I want to add */}
-        <button disabled type="button" onClick={() => getFriends()}>
+        <button
+          className="btn-outline btn-success btn gap-2"
+          type="button"
+          onClick={() => getFriends()}
+        >
           <GiThreeFriends className="inline-block" /> Import friends
         </button>
-      </p>
-    </li>
+        <button
+          className="btn-outline btn-error btn gap-2"
+          type="button"
+          onClick={() => removePlayer()}
+        >
+          <GoDiffRemoved className="inline-block" />
+        </button>
+      </td>
+    </tr>
   );
 }

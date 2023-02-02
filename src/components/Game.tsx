@@ -10,22 +10,21 @@ export default function Game({ gameId }: { gameId: string }) {
     }
   );
 
-  if (isLoading) return <li>Loading...</li>;
+  if (isLoading) return <p>Loading...</p>;
   return (
-    <li>
-      <a
-        href={`https://store.steampowered.com/app/${data.appid}`}
-        target="_blank"
-        rel="noreferrer"
-      >
-        <Image
-          src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${data.appid}/header.jpg`}
-          alt=""
-          width={600}
-          height={338}
-        />
-        {data.name}
-      </a>
-    </li>
+    <a
+      className="m-auto w-full transition duration-500 hover:scale-105 hover:shadow-2xl"
+      href={`https://store.steampowered.com/app/${data.appid}`}
+      target="_blank"
+      rel="noreferrer"
+    >
+      <Image
+        className="w-full rounded-lg"
+        src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${data.appid}/header.jpg`}
+        alt=""
+        width={400}
+        height={225}
+      />
+    </a>
   );
 }
