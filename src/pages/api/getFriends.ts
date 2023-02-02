@@ -13,31 +13,40 @@ export default async function handler(
     });
   }
 
-  const friendListResponse = await axios.get(
-    `http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?relationship=friend`,
-    {
-      params: {
-        key: process.env.STEAM_API_KEY,
-        steamid: playerId,
-      },
-    }
-  );
+  const friendListResponse = await axios
+    .get(
+      `http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?relationship=friend`,
+      {
+        params: {
+          key: process.env.STEAM_API_KEY,
+          steamid: playerId,
+        },
+      }
+    )
+    .catch(() => {
+      return res.status(400).json({
+        error: "Invalid playerId or friends not public",
+      });
+    });
 
-  const friendListRaw = friendListResponse.data.friendslist.friends.map(
+  const friendListRaw = friendListResponse?.data.friendslist.friends.map(
     (friend: any) => friend.steamid
   );
 
-  const FriendsWithNamesRes = await axios.get(
-    `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/`,
-    {
+  const FriendsWithNamesRes = await axios
+    .get(`http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/`, {
       params: {
         key: process.env.STEAM_API_KEY,
         steamids: friendListRaw.join(","),
       },
-    }
-  );
+    })
+    .catch(() => {
+      return res.status(400).json({
+        error: "Invalid playerId or profile not public",
+      });
+    });
 
-  const friendList = FriendsWithNamesRes.data.response.players.map(
+  const friendList = FriendsWithNamesRes?.data.response.players.map(
     (friend: any) => ({
       steamId: friend.steamid,
       name: friend.personaname,

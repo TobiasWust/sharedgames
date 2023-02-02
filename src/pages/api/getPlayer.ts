@@ -19,29 +19,44 @@ export default async function handler(
   if (playerId.length === 17) {
     steamId = playerId;
   } else {
-    const playerIdResponse = await axios.get(
-      `http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/`,
-      {
+    const playerIdResponse = await axios
+      .get(`http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/`, {
         params: {
           key: process.env.STEAM_API_KEY,
           vanityurl: playerId,
         },
-      }
-    );
-    steamId = playerIdResponse.data.response.steamid;
+      })
+      .catch(() => {
+        return res.status(400).json({
+          error: "Invalid playerId or profile not public",
+        });
+      });
+    steamId = playerIdResponse?.data.response.steamid;
   }
 
-  const playerData = await axios.get(
-    `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_API_KEY}&steamids=${steamId}`
-  );
+  const playerData = await axios
+    .get(
+      `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_API_KEY}&steamids=${steamId}`
+    )
+    .catch(() => {
+      return res.status(400).json({
+        error: "Invalid playerId or profile not public",
+      });
+    });
 
-  const player = playerData.data.response.players[0];
+  const player = playerData?.data.response.players[0];
 
-  const ownedGamesData = await axios.get(
-    `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_API_KEY}&steamid=${steamId}&format=json`
-  );
+  const ownedGamesData = await axios
+    .get(
+      `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_API_KEY}&steamid=${steamId}&format=json`
+    )
+    .catch(() => {
+      return res.status(400).json({
+        error: "Invalid playerId or profile not public",
+      });
+    });
 
-  const ownedGames = ownedGamesData.data.response.games.map(
+  const ownedGames = ownedGamesData?.data.response.games.map(
     (game: any) => game.appid
   );
 

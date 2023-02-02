@@ -13,11 +13,11 @@ export default function FriendsModal({
 }: FriendsModalProps) {
   const [filter, setFilter] = useState("");
 
-  const { data } = useQuery(
+  const { data, isLoading } = useQuery(
     ["friends", playerId],
     () =>
       fetch(`/api/getFriends?playerId=${playerId}`).then((res) => res.json()),
-    { enabled: !!playerId }
+    { enabled: !!playerId, staleTime: Infinity }
   );
 
   return (
@@ -28,7 +28,10 @@ export default function FriendsModal({
         htmlFor="friends-modal"
         className="modal h-screen cursor-pointer justify-end"
       >
-        <label className="modal-box relative h-full" htmlFor="nothing">
+        <label
+          className="modal-box relative h-full max-w-xs overflow-y-scroll"
+          htmlFor="nothing"
+        >
           {/* @ts-ignore */}
           <label
             htmlFor="friends-modal"
@@ -36,17 +39,22 @@ export default function FriendsModal({
           >
             {/* @ts-ignore */}✕
           </label>
-          <h3 className="text-lg font-bold">
+          <h3 className="pr-5 text-lg font-bold">
             Select friends you want to add to the list
           </h3>
           <input
             type="text"
-            className="input-bordered input w-full"
+            placeholder="Search friend"
+            className="input-bordered input my-5 w-full"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           />
-          <table className="table-compact table w-full">
-            <tbody>
+          {isLoading && <p>Loading...</p>}
+
+          {data?.error && <p>{data.error}</p>}
+          {data?.length === 0 && <p>No friends found</p>}
+          {data?.length > 0 && (
+            <div className="grid gap-2">
               {data
                 ?.filter((friend: any) => {
                   if (filter === "") return true;
@@ -55,23 +63,24 @@ export default function FriendsModal({
                     .includes(filter.toLowerCase());
                 })
                 .map((friend: any) => (
-                  <tr key={friend.steamId}>
-                    <td className="font-bold text-accent-content">
+                  <div
+                    className="flex items-center justify-between"
+                    key={friend.steamId}
+                  >
+                    <p className="font-bold text-accent-content">
                       {friend.name}
-                    </td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn"
-                        onClick={() => addPlayer(friend.steamId)}
-                      >
-                        <GoDiffAdded />
-                      </button>
-                    </td>
-                  </tr>
+                    </p>
+                    <button
+                      type="button"
+                      className="btn"
+                      onClick={() => addPlayer(friend.steamId)}
+                    >
+                      <GoDiffAdded />
+                    </button>
+                  </div>
                 ))}
-            </tbody>
-          </table>
+            </div>
+          )}
         </label>
       </label>
     </>
