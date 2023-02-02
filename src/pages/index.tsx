@@ -1,25 +1,15 @@
-import { useQueries } from "@tanstack/react-query";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import Game from "../components/Game";
 import intersection from "../utils/intersection";
 
 type Player = {
   player: {
+    steamid: string;
     personaname: string;
   };
   ownedGames: string[];
 };
-
-type GameProps = {
-  isLoading: boolean;
-  data: {
-    name: string;
-  };
-};
-
-function Game({ isLoading, data }: GameProps) {
-  return <li>{isLoading ? "loading..." : data.name}</li>;
-}
 
 export default function Home() {
   const [playerId, setPlayerId] = useState("tobiaswust");
@@ -32,22 +22,14 @@ export default function Home() {
       .then((data) => {
         if (
           players.find(
-            (player) => player.player.personaname === data.personaname
+            (player) => player.player.personaname === data.player.personaname
           )
-        )
+        ) {
           return;
+        }
         setPlayers((state) => [...state, data]);
       });
   }
-
-  const gamesResult = useQueries({
-    queries: gameIds.map((gameId) => ({
-      queryKey: ["games", gameId],
-      queryFn: () =>
-        fetch(`/api/getGameInfos?gameId=${gameId}`).then((res) => res.json()),
-      staleTime: Infinity,
-    })),
-  });
 
   useEffect(() => {
     if (players.length > 1) {
@@ -76,15 +58,15 @@ export default function Home() {
         <h2>Players:</h2>
         <ul>
           {players.map((player) => (
-            <li>{player.player.personaname}</li>
+            <li key={player.player.steamid}>{player.player.personaname}</li>
           ))}
         </ul>
         <h2>Games:</h2>
         <p>Games in common: {gameIds.length}</p>
         {gameIds.length === 0 && <p>No games in common</p>}
         <ul>
-          {gamesResult.map((gameResult) => (
-            <Game isLoading={gameResult.isLoading} data={gameResult.data} />
+          {gameIds.map((gameId) => (
+            <Game key={gameId} gameId={gameId} />
           ))}
         </ul>
       </main>
