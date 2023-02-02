@@ -6,7 +6,6 @@ export default function Imprint() {
       <p>Tobias Wust</p>
       <p>Steimbker Hof 1A</p>
       <p>30625 Hannover</p>
-      <p>Telefon: 0511 5152141010 Fax: 0511 5152141111 </p>
       <p>Mail: Webmaster (at) tobiaswust.de</p>
       <p>USt-IdNr.: DE317980584</p>
     </div>
