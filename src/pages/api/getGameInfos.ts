@@ -6,9 +6,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { gameId } = req.query as { gameId: string };
-
-  console.log("gameId:", gameId);
-
   if (!gameId) {
     return res.status(400).json({
       error: "Missing gameId",

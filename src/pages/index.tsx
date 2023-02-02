@@ -1,19 +1,17 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import Game from "../components/Game";
+import Player, { TPlayer } from "../components/Player";
 import intersection from "../utils/intersection";
 
-type Player = {
-  player: {
-    steamid: string;
-    personaname: string;
-  };
+type PlayerWithGames = {
+  player: TPlayer;
   ownedGames: string[];
 };
 
 export default function Home() {
   const [playerId, setPlayerId] = useState("tobiaswust");
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers] = useState<PlayerWithGames[]>([]);
   const [gameIds, setGameIds] = useState<string[]>([]);
 
   function getPlayerData() {
@@ -58,7 +56,7 @@ export default function Home() {
         <h2>Players:</h2>
         <ul>
           {players.map((player) => (
-            <li key={player.player.steamid}>{player.player.personaname}</li>
+            <Player key={player.player.steamid} player={player.player} />
           ))}
         </ul>
         <h2>Games:</h2>

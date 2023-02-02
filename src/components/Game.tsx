@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 
 export default function Game({ gameId }: { gameId: string }) {
   const { data, isLoading } = useQuery(
@@ -18,7 +19,7 @@ export default function Game({ gameId }: { gameId: string }) {
         target="_blank"
         rel="noreferrer"
       >
-        <img src={data.header_image} alt="" />
+        <Image src={data.header_image} alt="" />
         {data.name}
       </a>
     </li>
