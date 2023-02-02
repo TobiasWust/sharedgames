@@ -18,7 +18,7 @@ type GameProps = {
 };
 
 function Game({ isLoading, data }: GameProps) {
-  return <li>{data.name}</li>;
+  return <li>{isLoading ? "loading..." : data.name}</li>;
 }
 
 export default function Home() {
