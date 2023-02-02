@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { GiThreeFriends } from "react-icons/gi";
 import { GoDiffRemoved } from "react-icons/go";
 
@@ -5,6 +6,7 @@ export type TPlayer = {
   steamid: string;
   personaname: string;
   profileurl: string;
+  avatar: string;
 };
 
 type PlayerProps = {
@@ -19,25 +21,26 @@ export default function Player({
   getFriends,
 }: PlayerProps) {
   return (
-    <tr>
-      <td>
+    <div className="flex justify-between">
+      <div>
         <a
-          className="font-bold text-accent-content"
+          className="flex items-center gap-3 font-bold text-accent-content"
           href={player.profileurl}
           target="_blank"
           rel="noreferrer"
         >
+          <Image src={player.avatar} height={50} width={50} alt="avatar" />
           {player.personaname}
         </a>
-      </td>
-      <td className="flex gap-3">
+      </div>
+      <div className="flex gap-3">
         {/* // todo open modal and select friends that I want to add */}
         <button
           className="btn-outline btn-success btn gap-2"
           type="button"
           onClick={() => getFriends()}
         >
-          <GiThreeFriends className="inline-block" /> Import friends
+          <GiThreeFriends className="inline-block" /> Add friends
         </button>
         <button
           className="btn-outline btn-error btn gap-2"
@@ -46,7 +49,7 @@ export default function Player({
         >
           <GoDiffRemoved className="inline-block" />
         </button>
-      </td>
-    </tr>
+      </div>
+    </div>
   );
 }
