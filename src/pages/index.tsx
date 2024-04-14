@@ -110,7 +110,7 @@ export default function Home() {
             value={playerId}
             onChange={(e) => setPlayerId(e.target.value)}
           />
-          <button disabled={loading} className="btn" type="submit">
+          <button disabled={loading} className="btn" type="submit" aria-label="add">
             <GoDiffAdded />
           </button>
         </form>
