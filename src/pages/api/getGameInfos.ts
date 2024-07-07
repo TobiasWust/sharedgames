@@ -14,7 +14,8 @@ export default async function handler(
 
   const gameDetails = await axios
     .get(`https://steamspy.com/api.php?request=appdetails&appid=${gameId}`)
-    .catch(() => {
+    .catch((e: any) => {
+      console.log(e);
       throw new Error("Can't get GameInfos");
     });
 
