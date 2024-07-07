@@ -1,7 +1,7 @@
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { GoDiffAdded } from "react-icons/go";
+import { CgAddR } from "react-icons/cg";
 import { toast } from "react-toastify";
 import FriendsModal from "../components/FriendsModal";
 import Game from "../components/Game";
@@ -110,8 +110,13 @@ export default function Home() {
             value={playerId}
             onChange={(e) => setPlayerId(e.target.value)}
           />
-          <button disabled={loading} className="btn" type="submit" aria-label="add">
-            <GoDiffAdded />
+          <button
+            disabled={loading}
+            className="btn"
+            type="submit"
+            aria-label="add"
+          >
+            <CgAddR />
           </button>
         </form>
 

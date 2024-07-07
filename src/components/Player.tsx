@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { GiThreeFriends } from "react-icons/gi";
-import { GoDiffRemoved } from "react-icons/go";
+import { CgRemoveR } from "react-icons/cg";
 
 export type TPlayer = {
   steamid: string;
@@ -46,8 +46,9 @@ export default function Player({
           className="btn-outline btn-error btn gap-2"
           type="button"
           onClick={() => removePlayer()}
+          aria-label="remove"
         >
-          <GoDiffRemoved className="inline-block" />
+          <CgRemoveR className="inline-block" />
         </button>
       </div>
     </div>

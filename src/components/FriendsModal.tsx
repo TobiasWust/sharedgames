@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { GoDiffAdded } from "react-icons/go";
+import { CgAddR } from "react-icons/cg";
 
 type FriendsModalProps = {
   playerId: string;
@@ -74,8 +74,9 @@ export default function FriendsModal({
                       type="button"
                       className="btn"
                       onClick={() => addPlayer(friend.steamId)}
+                      aria-label="add Friend"
                     >
-                      <GoDiffAdded />
+                      <CgAddR />
                     </button>
                   </div>
                 ))}
