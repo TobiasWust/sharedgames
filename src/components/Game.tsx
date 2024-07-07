@@ -11,6 +11,7 @@ export default function Game({ gameId }: { gameId: string }) {
   );
 
   if (isLoading) return <p>Loading...</p>;
+  if (!data?.[gameId]?.success === true) return null;
   return (
     <a
       className="m-auto w-full transition duration-500 hover:scale-105 hover:shadow-2xl"
@@ -21,7 +22,7 @@ export default function Game({ gameId }: { gameId: string }) {
       <Image
         className="w-full rounded-lg"
         src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${gameId}/header.jpg`}
-        alt={data?.[gameId]?.data.name}
+        alt={data?.[gameId]?.data?.name || ""}
         width={400}
         height={225}
       />
