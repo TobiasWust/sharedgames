@@ -23,6 +23,11 @@ export default function App({ Component, pageProps }: AppProps) {
             gtag('config', '${process.env.NEXT_PUBLIC_ANALYTICS_ID}');
           `}
       </Script>
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2884105138688658"
+        crossOrigin="anonymous"
+      />
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <Component {...pageProps} />
       <Footer />
